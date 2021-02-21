@@ -1,0 +1,6 @@
+to install the pyaudio library:
+first install pipwin by typing:
+'pip install pipwin'
+you may need an admin permission to run this command
+and then type:
+'pipwin install pyaudio'
