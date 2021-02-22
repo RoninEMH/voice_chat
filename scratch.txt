@@ -4,3 +4,5 @@ first install pipwin by typing:
 you may need an admin permission to run this command
 and then type:
 'pipwin install pyaudio'
+
+same for twisted!
