@@ -20,12 +20,20 @@ class Client(DatagramProtocol):
     def startProtocol(self):
         py_audio = pyaudio.PyAudio()
 
-        self.output_stream = py_audio.open(format=pyaudio.paInt16,
-                                           output=True, rate=44100, channels=2,
-                                           frames_per_buffer=self.buffer)
-        self.input_stream = py_audio.open(format=pyaudio.paInt16,
-                                          input=True, rate=44100, channels=2,
-                                          frames_per_buffer=self.buffer)
+        self.output_stream = py_audio.open(
+            format=pyaudio.paInt16,
+            output=True,
+            rate=44100,
+            channels=2,
+            frames_per_buffer=self.buffer,
+        )
+        self.input_stream = py_audio.open(
+            format=pyaudio.paInt16,
+            input=True,
+            rate=44100,
+            channels=2,
+            frames_per_buffer=self.buffer,
+        )
         # reactor.callInThread(self.record)
         # not sure if needed
 
