@@ -1,1 +1,4 @@
+pipwin
+twisted
+pyaudio
 Flask
