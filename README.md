@@ -1,2 +1,2 @@
-# voice_chat
-Doing server stuff with text and chat.
+# Voice Chat
+Voice & text chatting between to clients in p2p (using a server to link between those) 
