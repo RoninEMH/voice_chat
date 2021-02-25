@@ -3,12 +3,13 @@ from twisted.internet import reactor
 import pyaudio
 import queue
 import threading
+import time
 
 
 class VoiceClient(DatagramProtocol):
     def __init__(self, ip, port, command_queue):
         self.another_client = ip, port
-        self.buffer = 1024  # 127.0.0.1
+        self.buffer = 1024
         self.mute = False
         self.output_stream = None
         self.input_stream = None
@@ -16,10 +17,12 @@ class VoiceClient(DatagramProtocol):
         self.initialize_messages()
 
     def initialize_messages(self):
-        self.message_to_mute = "mute please"
-        self.message_to_abort = "abort please"
+        self.message_to_mute = "mute"
+        self.message_to_unmute = "unmute"
+        self.message_to_abort = "abort"
 
     def startProtocol(self):
+        print("starting protocol")
         py_audio = pyaudio.PyAudio()
 
         self.output_stream = py_audio.open(
@@ -37,7 +40,10 @@ class VoiceClient(DatagramProtocol):
             frames_per_buffer=self.buffer,
         )
         reactor.callInThread(self.record)
-        self.pull_from_queue()
+        threading.Thread(target=self.check_queue, daemon=True).start()
+
+    def stopProtocol(self):
+        print("disconnected!!!")
 
     def record(self):
         while not self.mute:
@@ -47,23 +53,62 @@ class VoiceClient(DatagramProtocol):
     def datagramReceived(self, datagram, address):
         self.output_stream.write(datagram)
 
-    def Mute(self):
-        self.mute = True
-
     def check_queue(self):
         while True:
             if not self.message_queue.empty():
                 message = self.message_queue.get()
                 if message == self.message_to_mute:
-                    self.Mute()
-                if message == self.message_to_abort:
-                    self.Mute()  # just for safety
+                    self.mute = True
+                elif message == self.message_to_unmute:
+                    self.mute = False
+                    reactor.callInThread(self.record)
+                elif message == self.message_to_abort:
+                    print("in abort now!!!")
+                    self.mute = True  # just for safety
+                    try:
+                        self.input_stream.close()
+                        self.output_stream.close()
+                    except OSError:
+                        print("closing connection")
+                    reactor.stop()  # not in try because we want to stop anyway
                     break
-
-    def pull_from_queue(self):
-        threading.Thread(target=self.check_queue(), args=(), daemon=True)
 
 
 def run(ip, port, messages_queue):
     reactor.listenUDP(port, VoiceClient(ip, port, messages_queue))
     reactor.run()
+
+
+def example1():
+    print("beginning example1")
+    answer = "mute"
+    q.put(answer)
+    time.sleep(2)
+    answer = "unmute"
+    q.put(answer)
+    time.sleep(2)
+    answer = "abort"
+    q.put(answer)
+    print("example1 ended")
+
+
+def example2():
+    print("beginning example2")
+    answer = input("command: ")
+
+    while True:
+        q.put(str(answer))
+        if str(answer) == "abort":
+            break
+        answer = input("command: ")
+
+    print("example2 ended")
+
+
+q = queue.SimpleQueue()
+
+# examples to check the voice client
+# threading.Thread(target=example1, daemon=True).start()
+# threading.Thread(target=example2, daemon=False).start()
+
+run("127.0.0.1", 2565, q)
