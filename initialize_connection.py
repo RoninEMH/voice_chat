@@ -14,7 +14,9 @@ def _get_client_connection():
             answer = input()
             conn.send(answer.lower().encode())
             if answer.lower() == "y":
-                return EndUser(user_params[0], addr[0], user_params[1], user_params[2], False)
+                return EndUser(
+                    user_params[0], addr[0], user_params[1], user_params[2], False
+                )
             else:
                 return False
 
@@ -29,7 +31,9 @@ def initialize_connection_server():
 def initialize_connection_client(server_user: EndUser):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((variables.SERVER_IP, variables.INITIALIZATION_PORT))
-        s.send(f"{server_user.name},{server_user.chat_port},{server_user.voice_port}".encode())
+        s.send(
+            f"{server_user.name},{server_user.chat_port},{server_user.voice_port}".encode()
+        )
         res = s.recv(1024).decode()
         if res == "y":
             return True
