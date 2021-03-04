@@ -6,7 +6,8 @@ import threading
 
 
 class VoiceClient(DatagramProtocol):
-    def __init__(self, ip, port, command_queue):
+    def __init__(self, my_port, ip, port, command_queue):
+        self.my_port = my_port
         self.another_client = ip, port
         self.buffer = 1024
         self.mute = False
@@ -73,5 +74,5 @@ class VoiceClient(DatagramProtocol):
                     break
 
     def run(self):
-        reactor.listenUDP(self.another_client[1], self)
+        reactor.listenUDP(self.my_port, self)
         reactor.run()

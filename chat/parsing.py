@@ -1,21 +1,20 @@
 import queue
 
 
-
-
 class Parser:
-    def __init__(self, queue):
+    def __init__(self, command_queue):
         self.COMMAND_PREFIX = '/'
         self.command_dictionary = {}
+
         def mute(*args):
-            queue.put('mute')
+            command_queue.put('mute')
 
         def unmute(*args):
-            queue.put('unmute')
+            command_queue.put('unmute')
 
         def abort(*args):
             _, connection = args
-            queue.put('abort')
+            command_queue.put('abort')
             connection.close()
 
         commands = [mute, unmute, abort]
@@ -28,7 +27,7 @@ class Parser:
         except KeyError:
             print('no such command.')
 
-    def parse(self,str, connection):
+    def parse(self, str, connection):
         if str.startswith(self.COMMAND_PREFIX):
             str = str[len(self.COMMAND_PREFIX):].split()  # command is the first element, args are the rest
             self.parse_command(str[0], str[1:], connection)
