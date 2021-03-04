@@ -4,8 +4,8 @@ from connection import Connection
 
 
 class Host(Connection):
-    def __init__(self, name, port):
-        super().__init__(name)
+    def __init__(self, name, port, queue):
+        super().__init__(name,queue)
         # try:
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as server:
             server.bind(('localhost', port))

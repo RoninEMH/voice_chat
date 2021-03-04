@@ -5,8 +5,8 @@ from connection import Connection
 
 class Client(Connection):
 
-    def __init__(self, name, addr, port):
-        super().__init__(name)
+    def __init__(self, name, addr, port, queue):
+        super().__init__(name,queue)
         try:
             print('trying to connect...')
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as connection:

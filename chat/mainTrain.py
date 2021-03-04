@@ -1,10 +1,8 @@
 import client
 import host
-from parsing import parser_init
-
-parser_init()
+import queue
 answer = int(input('are you the host?'))
 if answer:
-    x = host.Host('alice', 12345)
+    x = host.Host('alice', 12345, queue.SimpleQueue())
 else:
-    x = client.Client('bob', 'localhost', 12345)
+    x = client.Client('bob', 'localhost', 12345,queue.SimpleQueue())

@@ -4,9 +4,10 @@ import parsing
 
 class Connection(ABC):
     @abstractmethod
-    def __init__(self, name):
+    def __init__(self, name, queue):
         self.name = name
         self.closed = False
+        self.queue = queue
 
     def read(self, socket):
         while not self.closed:
@@ -28,8 +29,9 @@ class Connection(ABC):
                 break
 
     def write(self, socket):
+        p = parsing.Parser(self.queue)
         while not self.closed:
-            user_input = parsing.parse(input(), self)
+            user_input = p.parse(input(), self)
             if not self.closed:
                 if user_input:
                     try:
