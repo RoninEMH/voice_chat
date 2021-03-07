@@ -41,6 +41,7 @@ class VoiceClient(DatagramProtocol):
         )
         print("should start voice...")
         reactor.callInThread(self.record)
+        threading.Thread(target=self.check_queue, daemon=True).start()
 
     def stopProtocol(self):
         print("disconnected!!!")
@@ -50,7 +51,7 @@ class VoiceClient(DatagramProtocol):
             data = self.input_stream.read(self.buffer)
             try:
                 self.transport.write(data, self.another_client)
-            except Exception or AttributeError:
+            except AttributeError or Exception:
                 break
 
     def datagramReceived(self, datagram, address):
