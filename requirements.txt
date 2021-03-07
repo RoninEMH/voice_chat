@@ -2,3 +2,4 @@ pipwin
 twisted
 pyaudio
 Flask
+click
