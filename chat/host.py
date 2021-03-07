@@ -1,6 +1,6 @@
 import socket
 import threading
-from connection import Connection
+from chat.chat_connection import Connection
 
 
 class Host(Connection):

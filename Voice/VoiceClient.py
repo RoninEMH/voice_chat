@@ -39,7 +39,7 @@ class VoiceClient(DatagramProtocol):
             channels=2,
             frames_per_buffer=self.buffer,
         )
-        reactor.callInThread(self.record)
+        self.record()
         threading.Thread(target=self.check_queue, daemon=True).start()
 
     def stopProtocol(self):

@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-import parsing
+from chat.parsing import Parser
 
 
 class Connection(ABC):
@@ -29,7 +29,7 @@ class Connection(ABC):
                 break
 
     def write(self, socket):
-        p = parsing.Parser(self.queue)
+        p = Parser(self.queue)
         while not self.closed:
             user_input = p.parse(input(), self)
             if not self.closed:
