@@ -18,9 +18,9 @@ import time
 @click.option("--chat", "-c", default=randint(1500, 2000), type=int)
 def create(name, voice, chat):
     requests.post(f"http://{SERVER_IP}:5000/Create", data={"name": name, "voice_port": voice, "chat_port": chat})
-    user = initialize_connection_server()
     q = queue.SimpleQueue()
     threading.Thread(target=Host, args=(name, int(chat), q)).start()
+    user = initialize_connection_server()
     voice_client = VoiceClient(voice, user.ip, int(user.voice_port), q)
     voice_client.run()
     # print(f"Name : {name} Voice : {voice} Chat : {chat}")
@@ -39,7 +39,6 @@ def join(name, host_name, voice, chat):
     if not initialize_connection_client(me):
         print("Server refused to connect")
         exit(1)
-    time.sleep(1)
     q = queue.SimpleQueue()
     threading.Thread(target=Client, args=(name, host["ip"], int(host["chat_port"]), q)).start()
     voice_client = VoiceClient(voice, host["ip"], int(host["voice_port"]), q)
