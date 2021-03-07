@@ -39,7 +39,8 @@ class VoiceClient(DatagramProtocol):
             channels=2,
             frames_per_buffer=self.buffer,
         )
-        self.record()
+        print("should start voice...")
+        reactor.callInThread(self.record)
         threading.Thread(target=self.check_queue, daemon=True).start()
 
     def stopProtocol(self):
