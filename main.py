@@ -34,7 +34,6 @@ def create(name, voice, chat):
 def join(name, host_name, voice, chat):
     # print(f"Name : {name} Host : {host_name} Voice : {voice} Chat : {chat}")
     host = requests.post(f"http://{SERVER_IP}:5000/Seek", data={"name": host_name}).json()
-    print(host)
     me = EndUser(name=name, ip=host["ip"], chat_port=chat, voice_port=voice, host=False)
     if not initialize_connection_client(me):
         print("Server refused to connect")
