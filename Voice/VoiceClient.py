@@ -49,7 +49,10 @@ class VoiceClient(DatagramProtocol):
     def record(self):
         while not self.mute:
             data = self.input_stream.read(self.buffer)
-            self.transport.write(data, self.another_client)
+            try:
+                self.transport.write(data, self.another_client)
+            except AttributeError or Exception:
+                break
 
     def datagramReceived(self, datagram, address):
         self.output_stream.write(datagram)
